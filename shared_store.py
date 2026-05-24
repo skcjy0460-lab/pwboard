@@ -45,10 +45,11 @@ STATUS_COLORS = {
 
 
 def ensure_data_dir():
-    """데이터 디렉토리 및 파일 초기화"""
+    """데이터 디렉토리 및 파일 초기화 (재귀 없이 직접 파일 생성)"""
     DATA_DIR.mkdir(exist_ok=True)
     if not QUEUE_FILE.exists():
-        save_queue([])
+        with open(QUEUE_FILE, "w", encoding="utf-8") as f:
+            json.dump([], f, ensure_ascii=False)
     if not LOG_FILE.exists():
         with open(LOG_FILE, "w", encoding="utf-8") as f:
             json.dump([], f, ensure_ascii=False)
@@ -66,7 +67,7 @@ def load_queue() -> list:
 
 def save_queue(queue: list):
     """대기열 저장"""
-    ensure_data_dir()
+    DATA_DIR.mkdir(exist_ok=True)
     with open(QUEUE_FILE, "w", encoding="utf-8") as f:
         json.dump(queue, f, ensure_ascii=False, indent=2)
 
